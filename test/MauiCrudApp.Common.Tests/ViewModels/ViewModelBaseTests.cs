@@ -18,7 +18,7 @@ namespace MauiCrudApp.Common.Tests.ViewModels
         }
 
         // Concrete implementation of ViewModelBase for testing
-        public class TestViewModel : ViewModelBase<string> // Changed from private to public
+        public class TestViewModel : ViewModelBase<string>
         {
             public bool InitializeCalled { get; private set; }
             public string ReceivedParameter { get; private set; }
@@ -51,6 +51,7 @@ namespace MauiCrudApp.Common.Tests.ViewModels
         {
             // Arrange
             var expectedParameter = "TestParameter";
+            _parameterStoreMock.Setup(ps => ps.HasParameter<string>()).Returns(true);
             _parameterStoreMock.Setup(ps => ps.PopParameter<string>()).Returns(expectedParameter);
             var viewModel = new TestViewModel(_parameterStoreMock.Object);
 
@@ -68,6 +69,7 @@ namespace MauiCrudApp.Common.Tests.ViewModels
         {
             // Arrange
             var expectedParameter = "TestParameter";
+            _parameterStoreMock.Setup(ps => ps.HasParameter<string>()).Returns(true);
             _parameterStoreMock.Setup(ps => ps.PopParameter<string>()).Returns(expectedParameter);
             var viewModel = new TestViewModel(_parameterStoreMock.Object);
 
@@ -84,6 +86,7 @@ namespace MauiCrudApp.Common.Tests.ViewModels
         {
             // Arrange
             var expectedException = new System.InvalidOperationException("Test exception");
+            _parameterStoreMock.Setup(ps => ps.HasParameter<string>()).Returns(true);
             _parameterStoreMock.Setup(ps => ps.PopParameter<string>()).Returns("TestParameter");
             var errorViewModel = new Mock<TestViewModel>(_parameterStoreMock.Object);
             errorViewModel.Setup(vm => vm.InitializeAsync(It.IsAny<string>())).ThrowsAsync(expectedException);
@@ -98,6 +101,7 @@ namespace MauiCrudApp.Common.Tests.ViewModels
         public async Task InitializeAsync_WhenParameterIsNull_CanHandleNullParameter()
         {
             // Arrange
+            _parameterStoreMock.Setup(ps => ps.HasParameter<string>()).Returns(true);
             _parameterStoreMock.Setup(ps => ps.PopParameter<string>()).Returns((string)null);
             var viewModel = new TestViewModel(_parameterStoreMock.Object);
 
@@ -113,6 +117,7 @@ namespace MauiCrudApp.Common.Tests.ViewModels
         public void PopParameter_WhenNoParameterExists_ThrowsInvalidOperationException()
         {
             // Arrange
+            _parameterStoreMock.Setup(ps => ps.HasParameter<string>()).Returns(true);
             _parameterStoreMock.Setup(ps => ps.PopParameter<string>())
                 .Throws(new InvalidOperationException("No parameter found"));
 
@@ -125,6 +130,7 @@ namespace MauiCrudApp.Common.Tests.ViewModels
         {
             // Arrange
             var parameter = "TestParameter";
+            _parameterStoreMock.Setup(ps => ps.HasParameter<string>()).Returns(true);
             _parameterStoreMock.Setup(ps => ps.PopParameter<string>()).Returns(parameter);
             var viewModel = new TestViewModel(_parameterStoreMock.Object);
 

@@ -24,4 +24,9 @@ public class NavigationParameterStore : INavigationParameterStore
         }
         throw new InvalidOperationException($"No parameter of type {typeof(TParameter).Name} found.");
     }
+
+    public bool HasParameter<TParameter>()
+    {
+        return _parameters.ContainsKey(typeof(TParameter));
+    }
 }

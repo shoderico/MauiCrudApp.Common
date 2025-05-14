@@ -182,6 +182,62 @@ namespace MauiCrudApp.Common.Tests.Navigation
             Assert.Throws<InvalidOperationException>(() => _store.PopParameter<int>());
         }
 
+        // Test HasParameter when no parameter exists
+        [Fact]
+        public void HasParameter_NoParameter_ReturnsFalse()
+        {
+            // Act
+            var result = _store.HasParameter<string>();
+
+            // Assert
+            Assert.False(result);
+        }
+
+        // Test HasParameter when parameter exists
+        [Fact]
+        public void HasParameter_ParameterExists_ReturnsTrue()
+        {
+            // Arrange
+            string value = "Test";
+
+            // Act
+            _store.PushParameter(value);
+            var result = _store.HasParameter<string>();
+
+            // Assert
+            Assert.True(result);
+        }
+
+        // Test HasParameter after popping parameter
+        [Fact]
+        public void HasParameter_AfterPopping_ReturnsFalse()
+        {
+            // Arrange
+            string value = "Test";
+            _store.PushParameter(value);
+            _store.PopParameter<string>();
+
+            // Act
+            var result = _store.HasParameter<string>();
+
+            // Assert
+            Assert.False(result);
+        }
+
+        // Test HasParameter with different parameter type
+        [Fact]
+        public void HasParameter_DifferentType_ReturnsFalse()
+        {
+            // Arrange
+            _store.PushParameter(42); // Push int parameter
+
+            // Act
+            var result = _store.HasParameter<string>();
+
+            // Assert
+            Assert.False(result);
+        }
+
         // Helper class for testing complex objects
         private class TestObject
         {

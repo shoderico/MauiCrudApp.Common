@@ -12,7 +12,9 @@ public abstract class ViewModelBase<TParameter> : ObservableObject, IInitialize
     protected ViewModelBase(INavigationParameterStore parameterStore)
     {
         _parameterStore = parameterStore ?? throw new ArgumentNullException(nameof(parameterStore));
-        _parameter = _parameterStore.PopParameter<TParameter>();
+
+        if (_parameterStore.HasParameter<TParameter>())
+            _parameter = _parameterStore.PopParameter<TParameter>();
     }
 
     public async Task PerformInitializeAsync()

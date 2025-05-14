@@ -4,4 +4,5 @@ public interface INavigationParameterStore
 {
     void PushParameter<TParameter>(TParameter parameter);
     TParameter PopParameter<TParameter>();
+    bool HasParameter<TParameter>();
 }
