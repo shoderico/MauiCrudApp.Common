@@ -2,5 +2,5 @@
 
 public class ItemListParameter
 {
-    public string SearchText { get; set; }
+    public string? SearchText { get; set; }
 }

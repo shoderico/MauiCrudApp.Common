@@ -23,25 +23,39 @@ public partial class ItemEditViewModel : ViewModelBase<ItemEditParameter>, IEdit
     {
         _navigationService = navigationService;
         _itemService = itemService;
+
+        _disposed = false;
+
+        //_originalItem = new Item();
+        IsNew = false;
+        //Item = new Item();
+        //_listItems = new Collection<Item>();
+        //_itemChangeTracker = new ChangeTracker(typeof(Item), Item);
     }
 
 
 
 
 
-    private Item _originalItem;
+    private Item? _originalItem;
 
     [ObservableProperty]
-    private Item item;
+    private Item? item;
 
     [ObservableProperty]
     private bool isNew;
 
-    private Collection<Item> _listItems;
+    private Collection<Item>? _listItems;
 
-    private ChangeTracker _itemChangeTracker;
+    private ChangeTracker? _itemChangeTracker;
 
-    public bool IsEditing => _itemChangeTracker.HasChanges;
+    public bool IsEditing
+    {
+        get
+        {
+           return _itemChangeTracker?.HasChanges ?? false;
+        }
+    }
 
     public override async Task InitializeAsync(ItemEditParameter parameter)
     {
@@ -60,9 +74,9 @@ public partial class ItemEditViewModel : ViewModelBase<ItemEditParameter>, IEdit
 
         Item = new Item()
         {
-            Id = _originalItem.Id,
-            Name = _originalItem.Name,
-            Description = _originalItem.Description
+            Id = _originalItem?.Id ?? 0,
+            Name = _originalItem?.Name ?? "",
+            Description = _originalItem?.Description ?? ""
         };
 
         _itemChangeTracker = new ChangeTracker(typeof(Item), Item);
@@ -78,28 +92,27 @@ public partial class ItemEditViewModel : ViewModelBase<ItemEditParameter>, IEdit
     [RelayCommand]
     private async Task Save()
     {
-        if (IsNew)
+        if (Item != null)
         {
-            await _itemService.AddItemAsync(Item);
-
-            if (_listItems != null)
+            if (IsNew)
             {
-                _listItems.Add(Item);
+                await _itemService.AddItemAsync(Item);
+                _listItems?.Add(Item);
+            }
+            else
+            {
+                await _itemService.UpdateItemAsync(Item);
             }
         }
-        else
-        {
-            await _itemService.UpdateItemAsync(Item);
-        }
 
-        _itemChangeTracker.Save();
+        _itemChangeTracker?.Save();
         await _navigationService.GoBackAsync();
     }
 
     [RelayCommand]
     private async Task Cancel()
     {
-        _itemChangeTracker.Save();
+        _itemChangeTracker?.Save();
         await _navigationService.GoBackAsync();
     }
 
@@ -108,7 +121,7 @@ public partial class ItemEditViewModel : ViewModelBase<ItemEditParameter>, IEdit
         if (_disposed)
             return;
 
-        _itemChangeTracker.Dispose();
+        _itemChangeTracker?.Dispose();
         _disposed = true;
     }
 }

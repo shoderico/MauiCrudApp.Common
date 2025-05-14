@@ -34,11 +34,14 @@ public partial class ItemListViewModel : ViewModelBase<ItemListParameter>
     private ObservableCollection<Item> items;
 
     [ObservableProperty]
-    private string searchText;
+    private string? searchText;
 
     public override async Task InitializeAsync(ItemListParameter parameter)
     {
-        SearchText = parameter?.SearchText;
+        if (parameter != null)
+        {
+            SearchText = parameter.SearchText;
+        }
         await LoadItemsAsync();
     }
 

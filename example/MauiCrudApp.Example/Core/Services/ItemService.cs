@@ -10,7 +10,7 @@ public class ItemService : IItemService
         new Item {Id=2, Name="Jane Roe", Description="placeholder female names that are used in the British and American legal system" }
     };
 
-    public async Task<List<Item>> GetItemsAsync(string searchText = null)
+    public async Task<List<Item>> GetItemsAsync(string? searchText = null)
     {
         var items = _items.AsEnumerable();
         if (!string.IsNullOrEmpty(searchText))
@@ -20,7 +20,7 @@ public class ItemService : IItemService
         return await Task.FromResult(items.ToList());
     }
 
-    public async Task<Item> GetItemByIdAsync(int id)
+    public async Task<Item?> GetItemByIdAsync(int id)
     {
         return await Task.FromResult(_items.FirstOrDefault(i => i.Id == id));
     }
