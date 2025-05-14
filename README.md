@@ -16,7 +16,7 @@
 ```
 MauiCrudApp.Common/
 ├── src/
-│   ├── YourApp.Common/
+│   ├── MauiCrudApp.Common/
 │   │   ├── Interfaces/
 │   │   │   ├── IEditableViewModel.cs        # Defines editable view-model contract
 │   │   │   ├── IInitialize.cs               # Standardizes async initialization
@@ -52,25 +52,23 @@ example/
 ├── MauiCrudApp.Example/
 │   ├── Core/
 │   │   ├── Models/
-│   │   │   ├── Item.cs                      # Data model with change-tracked properties
+│   │   │   ├── Item.cs                    # Data model with change-tracked properties
 │   │   ├── Services/
-│   │   │   ├── IItemService.cs              # Interface for item CRUD operations
-│   │   │   ├── ItemService.cs               # In-memory item service implementation
+│   │   │   ├── IItemService.cs            # Interface for item CRUD operations
+│   │   │   ├── ItemService.cs             # In-memory item service implementation
 │   ├── Features/
-│   │   ├── ItemList/
+│   │   ├── ItemListEidt/
 │   │   │   ├── ViewModels/
-│   │   │   │   ├── ItemListViewModel.cs     # View model for listing and searching items
-│   │   │   │   ├── ItemListParameter.cs     # Navigation parameter for list page
+│   │   │   │   ├── ItemListViewModel.cs  # View model for listing and searching items
+│   │   │   │   ├── ItemListParameter.cs  # Navigation parameter for list page
+│   │   │   │   ├── ItemEditViewModel.cs  # View model for editing/adding items
+│   │   │   │   ├── ItemEditParameter.cs  # Navigation parameter for edit page
 │   │   │   ├── Views/
-│   │   │   │   ├── ItemListPage.xaml        # XAML for item list UI
-│   │   │   │   ├── ItemListPage.xaml.cs     # Code-behind for item list page
-│   │   ├── ItemEdit/
-│   │   │   ├── ViewModels/
-│   │   │   │   ├── ItemEditViewModel.cs     # View model for editing/adding items
-│   │   │   │   ├── ItemEditParameter.cs     # Navigation parameter for edit page
-│   │   │   ├── Views/
-│   │   │   │   ├── ItemEditPage.xaml        # XAML for item edit UI
-│   │   │   │   ├── ItemEditPage.xaml.cs     # Code-behind for item edit page
+│   │   │   │   ├── ItemListPage.xaml     # XAML for item list UI
+│   │   │   │   ├── ItemListPage.xaml.cs  # Code-behind for item list page
+│   │   │   │   ├── ItemEditPage.xaml     # XAML for item edit UI
+│   │   │   │   ├── ItemEditPage.xaml.cs  # Code-behind for item edit page
+│   │
 │   ├── App.xaml                             # Application XAML
 │   ├── App.xaml.cs                          # Application startup logic
 │   ├── AppShell.xaml                        # Shell XAML for navigation
@@ -191,12 +189,18 @@ Build a page to list items, deriving from `PageBase` for automatic view-model in
 public partial class ItemListViewModel : ViewModelBase<ItemListParameter>
 {
     private readonly INavigationService _navigationService;
+    private readonly IDialogService _dialogService;
     private readonly IItemService _itemService;
 
-    public ItemListViewModel(INavigationParameterStore parameterStore, INavigationService navigationService, IItemService itemService) 
+    public ItemListViewModel(
+          INavigationParameterStore parameterStore
+        , INavigationService navigationService
+        , IDialogService dialogService
+        , IItemService itemService) 
         : base(parameterStore)
     {
         _navigationService = navigationService;
+        _dialogService = dialogService;
         _itemService = itemService;
         Items = new ObservableCollection<Item>();
     }
@@ -248,7 +252,7 @@ public partial class ItemListPage : PageBase
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:commonViews="clr-namespace:MauiCrudApp.Common.Views;assembly=MauiCrudApp.Common"
-    xmlns:vm="clr-namespace:MauiCrudApp.Example.Features.ItemList.ViewModels">
+    xmlns:vm="clr-namespace:MauiCrudApp.Example.Features.ItemListEdit.ViewModels">
     <StackLayout>
         <SearchBar Text="{Binding SearchText}" SearchButtonPressed="{Binding SearchCommand}" />
         <CollectionView ItemsSource="{Binding Items}">
@@ -281,7 +285,10 @@ public partial class ItemEditViewModel : ViewModelBase<ItemEditParameter>, IEdit
     private bool _hasChanges;
     private bool _changesHandled;
 
-    public ItemEditViewModel(INavigationParameterStore parameterStore, INavigationService navigationService, IItemService itemService) 
+    public ItemEditViewModel(
+          INavigationParameterStore parameterStore
+        , INavigationService navigationService
+        , IItemService itemService) 
         : base(parameterStore)
     {
         _navigationService = navigationService;
