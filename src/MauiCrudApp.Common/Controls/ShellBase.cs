@@ -1,6 +1,6 @@
 ﻿using MauiCrudApp.Common.Interfaces;
 
-namespace MauiCrudApp.Common.Shell;
+namespace MauiCrudApp.Common.Controls;
 
 public class ShellBase : Microsoft.Maui.Controls.Shell, IDisposable
 {

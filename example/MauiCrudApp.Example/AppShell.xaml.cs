@@ -1,5 +1,5 @@
 ﻿using MauiCrudApp.Common.Interfaces;
-using MauiCrudApp.Common.Shell;
+using MauiCrudApp.Common.Controls;
 
 namespace MauiCrudApp.Example
 {

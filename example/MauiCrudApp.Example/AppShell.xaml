@@ -3,7 +3,7 @@
     x:Class="MauiCrudApp.Example.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:shell="clr-namespace:MauiCrudApp.Common.Shell;assembly=MauiCrudApp.Common"
+    xmlns:shell="clr-namespace:MauiCrudApp.Common.Controls;assembly=MauiCrudApp.Common"
     xmlns:local="clr-namespace:MauiCrudApp.Example"
     xmlns:views="clr-namespace:MauiCrudApp.Example.Features.ItemList.Views"
     Shell.FlyoutBehavior="Flyout"

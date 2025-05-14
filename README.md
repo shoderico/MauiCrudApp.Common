@@ -32,7 +32,7 @@ MauiCrudApp.Common/
 │   │   │   ├── NavigationParameterStore.cs  # Manages parameter passing
 │   │   ├── Services/
 │   │   │   ├── DialogService.cs             # Handles cross-platform dialogs
-│   │   ├── Shell/
+│   │   ├── Controls/
 │   │   │   ├── ShellBase.cs                 # Base class for MAUI shells
 │   │   ├── ViewModels/
 │   │   │   ├── ViewModelBase.cs             # Base view-model with initialization
