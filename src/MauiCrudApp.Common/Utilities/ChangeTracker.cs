@@ -17,6 +17,7 @@ public class ChangeTracker : IDisposable
     private ObservableObject _parent;
     private string _propertyName;
     private bool _disposed;
+    private Action _onChanged;
 
     // Gets whether any tracked properties have changed
     public bool HasChanges => _hasChanges;
@@ -96,7 +97,6 @@ public class ChangeTracker : IDisposable
     }
 
     // Handles property changes of the parent object
-
     private void Parent_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
     {
         if (e.PropertyName == _propertyName)
@@ -126,12 +126,18 @@ public class ChangeTracker : IDisposable
     {
         SaveInitialValues();
 
-        // INotifyCollectionChangedをチェック
+        // Subscribe to collection changes if the object is a collection
         if (observable is INotifyCollectionChanged collection)
         {
+            collection.CollectionChanged -= Collection_CollectionChanged;
             collection.CollectionChanged += Collection_CollectionChanged;
         }
 
+        // Recursively subscribe to all TrackChanges properties
+        SubscribeToProperties(observable, onChanged);
+
+        // Handle property changes to update subscriptions dynamically
+        observable.PropertyChanged -= Instance_PropertyChanged;
         observable.PropertyChanged += (s, e) =>
         {
             if (_initialValues.ContainsKey(e.PropertyName))
@@ -139,35 +145,112 @@ public class ChangeTracker : IDisposable
                 _hasChanges = HasChangesInternal();
                 onChanged?.Invoke();
             }
-            else if (_initialValues.Any(kvp => kvp.Key == e.PropertyName && kvp.Value != null))
+            var prop = _type.GetProperty(e.PropertyName);
+            var value = prop?.GetValue(observable);
+            if (value != null)
             {
-                var prop = _type.GetProperty(e.PropertyName);
-                var value = prop?.GetValue(observable);
-                if (value is ObservableObject nestedObj)
+                UnsubscribeFromProperty(value); // Unsubscribe from old value
+                SubscribeToProperty(value, onChanged); // Subscribe to new value
+            }
+        };
+    }
+
+    // Subscribes to all TrackChanges properties of an ObservableObject
+    private void SubscribeToProperties(ObservableObject observable, Action onChanged)
+    {
+        var properties = observable.GetType()
+            .GetProperties(BindingFlags.Public | BindingFlags.Instance)
+            .Where(p => p.GetCustomAttributes(typeof(TrackChangesAttribute), false).Any());
+
+        foreach (var prop in properties)
+        {
+            var value = prop.GetValue(observable);
+            if (value != null)
+            {
+                SubscribeToProperty(value, onChanged);
+            }
+        }
+    }
+
+    // Subscribes to a single property value (ObservableObject or INotifyCollectionChanged)
+    private void SubscribeToProperty(object value, Action onChanged)
+    {
+        if (value is ObservableObject nestedObj)
+        {
+            nestedObj.PropertyChanged -= NestedObj_PropertyChanged;
+            nestedObj.PropertyChanged += NestedObj_PropertyChanged;
+            // Recursively subscribe to nested object's properties
+            SubscribeToProperties(nestedObj, onChanged);
+        }
+        else if (value is INotifyCollectionChanged nestedCollection)
+        {
+            nestedCollection.CollectionChanged -= NestedCollection_CollectionChanged;
+            nestedCollection.CollectionChanged += NestedCollection_CollectionChanged;
+            if (nestedCollection is IEnumerable enumerable)
+            {
+                foreach (var item in enumerable)
                 {
-                    nestedObj.PropertyChanged += NestedObj_PropertyChanged;
-                }
-                else if (value is INotifyCollectionChanged nestedCollection)
-                {
-                    nestedCollection.CollectionChanged += NestedCollection_CollectionChanged;
-                    if (nestedCollection is IEnumerable enumerable)
+                    if (item is ObservableObject itemObj)
                     {
-                        foreach (var item in enumerable)
-                        {
-                            if (item is ObservableObject itemObj)
-                            {
-                                itemObj.PropertyChanged += ItemObj_PropertyChanged;
-                            }
-                        }
+                        itemObj.PropertyChanged -= ItemObj_PropertyChanged;
+                        itemObj.PropertyChanged += ItemObj_PropertyChanged;
+                        SubscribeToProperties(itemObj, onChanged);
                     }
                 }
             }
-        };
+        }
+    }
+
+    // Unsubscribes from a property value
+    private void UnsubscribeFromProperty(object value)
+    {
+        if (value is ObservableObject nestedObj)
+        {
+            nestedObj.PropertyChanged -= NestedObj_PropertyChanged;
+            var properties = nestedObj.GetType()
+                .GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                .Where(p => p.GetCustomAttributes(typeof(TrackChangesAttribute), false).Any());
+
+            foreach (var prop in properties)
+            {
+                var propValue = prop.GetValue(nestedObj);
+                if (propValue != null)
+                {
+                    UnsubscribeFromProperty(propValue);
+                }
+            }
+        }
+        else if (value is INotifyCollectionChanged nestedCollection)
+        {
+            nestedCollection.CollectionChanged -= NestedCollection_CollectionChanged;
+            if (nestedCollection is IEnumerable enumerable)
+            {
+                foreach (var item in enumerable)
+                {
+                    if (item is ObservableObject itemObj)
+                    {
+                        itemObj.PropertyChanged -= ItemObj_PropertyChanged;
+                    }
+                }
+            }
+        }
     }
 
     // Handles collection changes for the top-level object
     private void Collection_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
     {
+        if (e.NewItems != null)
+        {
+            foreach (var item in e.NewItems)
+            {
+                if (item is ObservableObject itemObj)
+                {
+                    itemObj.PropertyChanged -= ItemObj_PropertyChanged;
+                    itemObj.PropertyChanged += ItemObj_PropertyChanged;
+                    SubscribeToProperties(itemObj, _onChanged);
+                }
+            }
+        }
         _hasChanges = HasChangesInternal();
         _onChanged?.Invoke();
     }
@@ -182,6 +265,18 @@ public class ChangeTracker : IDisposable
     // Handles collection changes for nested collections
     private void NestedCollection_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
     {
+        if (e.NewItems != null)
+        {
+            foreach (var item in e.NewItems)
+            {
+                if (item is ObservableObject itemObj)
+                {
+                    itemObj.PropertyChanged -= ItemObj_PropertyChanged;
+                    itemObj.PropertyChanged += ItemObj_PropertyChanged;
+                    SubscribeToProperties(itemObj, _onChanged);
+                }
+            }
+        }
         _hasChanges = HasChangesInternal();
         _onChanged?.Invoke();
     }
@@ -321,23 +416,9 @@ public class ChangeTracker : IDisposable
             {
                 var prop = _type.GetProperty(kvp.Key);
                 var value = prop?.GetValue(observable);
-                if (value is ObservableObject nestedObj)
+                if (value != null)
                 {
-                    nestedObj.PropertyChanged -= NestedObj_PropertyChanged;
-                }
-                else if (value is INotifyCollectionChanged nestedCollection)
-                {
-                    nestedCollection.CollectionChanged -= NestedCollection_CollectionChanged;
-                    if (nestedCollection is IEnumerable enumerable)
-                    {
-                        foreach (var item in enumerable)
-                        {
-                            if (item is ObservableObject itemObj)
-                            {
-                                itemObj.PropertyChanged -= ItemObj_PropertyChanged;
-                            }
-                        }
-                    }
+                    UnsubscribeFromProperty(value);
                 }
             }
         }
