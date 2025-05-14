@@ -4,10 +4,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 
 namespace MauiCrudApp.Common.Utilities;
 
-public class ObservableDictionary<TKey, TValue> : ObservableObject, IDictionary<TKey, TValue>, INotifyCollectionChanged
+public class ObservableDictionary<TKey, TValue> : ObservableObject, IDictionary<TKey, TValue>, INotifyCollectionChanged where TKey: notnull
 {
     private readonly Dictionary<TKey, TValue> _dictionary;
 
@@ -111,7 +112,10 @@ public class ObservableDictionary<TKey, TValue> : ObservableObject, IDictionary<
         return false;
     }
 
-    public bool TryGetValue(TKey key, out TValue value) => _dictionary.TryGetValue(key, out value);
+    public bool TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value)
+    {
+        return _dictionary.TryGetValue(key, out value);
+    } 
 
     IEnumerator IEnumerable.GetEnumerator() => _dictionary.GetEnumerator();
 
