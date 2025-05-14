@@ -18,14 +18,17 @@ public class ChangeTracker : IDisposable
     private string _propertyName;
     private bool _disposed;
 
+    // Gets whether any tracked properties have changed
     public bool HasChanges => _hasChanges;
 
+    // Constructor initializes the type and instance to track
     public ChangeTracker(Type type, object instance)
     {
         _type = type ?? throw new ArgumentNullException(nameof(type));
         _instance = instance ?? throw new ArgumentNullException(nameof(instance));
     }
 
+    // Starts tracking changes for the instance
     public void Track(Action onChanged)
     {
         if (_disposed)
@@ -38,6 +41,7 @@ public class ChangeTracker : IDisposable
         }
     }
 
+    // Tracks changes for a specific property of a parent object
     public void TrackProperty(ObservableObject parent, string propertyName, Action onChanged)
     {
         if (_disposed)
@@ -55,6 +59,7 @@ public class ChangeTracker : IDisposable
         _onChanged = onChanged;
     }
 
+    // Saves current property values as the baseline
     public void Save()
     {
         if (_disposed)
@@ -64,6 +69,7 @@ public class ChangeTracker : IDisposable
         _hasChanges = false;
     }
 
+    // Saves initial values of tracked properties
     private void SaveInitialValues()
     {
         _initialValues.Clear();
@@ -78,6 +84,7 @@ public class ChangeTracker : IDisposable
         }
     }
 
+    // Checks if any tracked properties have changed
     private bool HasChangesInternal()
     {
         return _initialValues.Any(kvp =>
@@ -88,7 +95,7 @@ public class ChangeTracker : IDisposable
         });
     }
 
-    private Action _onChanged;
+    // Handles property changes of the parent object
 
     private void Parent_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
     {
@@ -104,6 +111,7 @@ public class ChangeTracker : IDisposable
         }
     }
 
+    // Handles direct property changes of the tracked instance
     private void Instance_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
     {
         if (_initialValues.ContainsKey(e.PropertyName))
@@ -113,6 +121,7 @@ public class ChangeTracker : IDisposable
         }
     }
 
+    // Starts tracking changes for an ObservableObject
     private void StartTracking(ObservableObject observable, Action onChanged)
     {
         SaveInitialValues();
@@ -156,30 +165,35 @@ public class ChangeTracker : IDisposable
         };
     }
 
+    // Handles collection changes for the top-level object
     private void Collection_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
     {
         _hasChanges = HasChangesInternal();
         _onChanged?.Invoke();
     }
 
+    // Handles property changes for nested objects
     private void NestedObj_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
     {
         _hasChanges = HasChangesInternal();
         _onChanged?.Invoke();
     }
 
+    // Handles collection changes for nested collections
     private void NestedCollection_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
     {
         _hasChanges = HasChangesInternal();
         _onChanged?.Invoke();
     }
 
+    // Handles property changes for collection items
     private void ItemObj_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
     {
         _hasChanges = HasChangesInternal();
         _onChanged?.Invoke();
     }
 
+    // Clones a value for initial state tracking
     private object CloneValue(object value, Dictionary<object, object> clonedObjects = null)
     {
         if (value == null)
@@ -236,6 +250,7 @@ public class ChangeTracker : IDisposable
         return value;
     }
 
+    // Deeply compares two objects for equality
     private bool DeepEquals(object a, object b)
     {
         if (ReferenceEquals(a, b))
@@ -282,6 +297,7 @@ public class ChangeTracker : IDisposable
         return Equals(a, b);
     }
 
+    // Disposes the tracker and unsubscribes all events
     public void Dispose()
     {
         if (_disposed)
