@@ -11,7 +11,7 @@ public abstract class ViewModelBase<TParameter> : ObservableObject, IInitialize
 
     protected ViewModelBase(INavigationParameterStore parameterStore)
     {
-        _parameterStore = parameterStore;
+        _parameterStore = parameterStore ?? throw new ArgumentNullException(nameof(parameterStore));
         _parameter = _parameterStore.PopParameter<TParameter>();
     }
 
