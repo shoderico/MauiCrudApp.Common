@@ -374,6 +374,89 @@ public partial class ItemEditPage : PageBase
 **Automatic Change Tracking with `TrackChanges`**:
 The `Item` model's `Name` and `Description` properties are marked with `[property: TrackChanges]`, enabling `ChangeTracker` to automatically monitor changes. This eliminates manual change detection, as `ChangeTracker` compares initial and current values, updating `IsEditing` via the `TrackProperty` callback. Combined with `IEditableViewModel`, this ensures `ShellBase` displays a dialog when users attempt to navigate away (e.g., via back button or swipe) with unsaved changes, preventing accidental data loss. This seamless integration delivers a polished UX with minimal developer effort.
 
+## 🧩 Visual Studio Templates
+
+To make starting with **MauiCrudApp.Common** even easier, we provide **Visual Studio Project and Item Templates** to scaffold your projects and features effortlessly. These templates are located in the `template/` directory and can be installed for use in Visual Studio.
+
+### 📂 Template Directory Structure
+
+```
+template/
+├── MauiCrudApp.ProjectTemplate/
+│   ├── MauiCrudApp.ProjectTemplate.zip  # Project template for new CRUD apps
+│   ├── ...
+├── MauiCrudApp.ItemTemplate/
+│   ├── MauiCrudApp.ItemTemplate.zip    # Item template for adding new features
+│   ├── ...
+```
+
+### 🚀 Using the Templates
+
+#### 1. **Install the Templates**
+To use the templates in Visual Studio, copy the ZIP files to the appropriate Visual Studio template directories:
+
+- **Project Template**:
+  ```bash
+  %USERPROFILE%\Documents\Visual Studio <version>\Templates\ProjectTemplates
+  ```
+- **Item Template**:
+  ```bash
+  %USERPROFILE%\Documents\Visual Studio <version>\Templates\ItemTemplates
+  ```
+
+Replace `<version>` with your Visual Studio version (e.g., 2022). Once copied, the templates will appear in Visual Studio’s **New Project** and **Add New Item** dialogs.
+
+#### 2. **Set Up a New Project with the Project Template**
+The **MauiCrudApp.ProjectTemplate** creates a new .NET MAUI project preconfigured to work with **MauiCrudApp.Common**. After creating the project in Visual Studio, follow these steps to integrate the library:
+
+- **Clone the MauiCrudApp.Common Repository**:
+  Clone the **MauiCrudApp.Common** repository into a folder adjacent to your new project’s root directory, so the structure looks like this:
+  ```
+  ├── YourCreatedProject/
+  │   ├── ...  # Your project files
+  ├── MauiCrudApp.Common/
+  │   ├── src/
+  │   │   ├── MauiCrudApp.Common/
+  │   │   │   ├── MauiCrudApp.Common.csproj  # The library project
+  │   ├── ...
+  ```
+
+  Run the following command to clone the repository:
+  ```bash
+  git clone https://github.com/shoderico/MauiCrudApp.Common.git
+  ```
+
+- **Add a Project Reference**:
+  In Visual Studio, add a reference to `MauiCrudApp.Common.csproj` in your project:
+  1. Right-click on your project in Solution Explorer.
+  2. Select **Add > Project Reference**.
+  3. Browse to `MauiCrudApp.Common/src/MauiCrudApp.Common/MauiCrudApp.Common.csproj` and select it.
+
+This sets up your project to leverage the library’s navigation, change tracking, and dialog features.
+
+#### 3. **Add Features with the Item Template**
+The **MauiCrudApp.ItemTemplate** lets you quickly add new features to the `Features/` folder of your project. When you add a new item named `Feature1` using the template, it generates a fully structured feature module:
+
+```
+├── YourCreatedProject/
+│   ├── Features/
+│   │   ├── Feature1/
+│   │   │   ├── ViewModels/
+│   │   │   │   ├── Feature1ViewModel.cs     # View model for the feature
+│   │   │   │   ├── Feature1Parameter.cs     # Navigation parameter for the feature
+│   │   │   ├── Views/
+│   │   │   │   ├── Feature1Page.xaml        # XAML for the feature’s UI
+│   │   │   │   ├── Feature1Page.xaml.cs     # Code-behind for the feature page
+```
+
+To add a new feature:
+1. In Visual Studio, right-click the `Features/` folder in Solution Explorer.
+2. Select **Add > New Item**.
+3. Choose the **MauiCrudApp.ItemTemplate** and name it (e.g., `Feature1`).
+4. The template generates the view model, navigation parameter, XAML page, and code-behind, ready to integrate with the library’s navigation and change-tracking features.
+
+These templates streamline your workflow, letting you focus on building great apps with **MauiCrudApp.Common**! 🚀
+
 ## 🛠️ Contributing
 
 We welcome contributions to make **MauiCrudApp.Common** even better! To contribute:
