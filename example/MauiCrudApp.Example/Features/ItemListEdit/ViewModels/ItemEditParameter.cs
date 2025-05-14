@@ -2,7 +2,7 @@
 using MauiCrudApp.Example.Core.Models;
 
 
-namespace MauiCrudApp.Example.Features.ItemEdit.ViewModels;
+namespace MauiCrudApp.Example.Features.ItemListEdit.ViewModels;
 
 public class ItemEditParameter
 {

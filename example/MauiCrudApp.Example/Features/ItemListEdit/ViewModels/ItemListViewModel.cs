@@ -8,19 +8,25 @@ using MauiCrudApp.Common.ViewModels;
 
 using MauiCrudApp.Example.Core.Models;
 using MauiCrudApp.Example.Core.Services;
-using MauiCrudApp.Example.Features.ItemEdit.ViewModels;
-using MauiCrudApp.Example.Features.ItemEdit.Views;
+using MauiCrudApp.Example.Features.ItemListEdit.Views;
 
-namespace MauiCrudApp.Example.Features.ItemList.ViewModels;
+
+namespace MauiCrudApp.Example.Features.ItemListEdit.ViewModels;
 
 public partial class ItemListViewModel : ViewModelBase<ItemListParameter>
 {
     private readonly INavigationService _navigationService;
+    private readonly IDialogService _dialogService;
     private readonly IItemService _itemService;
 
-    public ItemListViewModel(INavigationParameterStore parameterStore, INavigationService navigationService, IItemService itemService) : base(parameterStore)
+    public ItemListViewModel(
+          INavigationParameterStore parameterStore
+        , IDialogService dialogService
+        , INavigationService navigationService
+        , IItemService itemService) : base(parameterStore)
     {
         _navigationService = navigationService;
+        _dialogService = dialogService;
         _itemService = itemService;
 
         items = new ObservableCollection<Item>();
@@ -65,7 +71,7 @@ public partial class ItemListViewModel : ViewModelBase<ItemListParameter>
         }
         catch (Exception ex)
         {
-            await Shell.Current.CurrentPage.DisplayAlert("EditItem: Error", ex.Message, "OK");
+            await _dialogService.DisplayAlert("EditItem: Error", ex.Message, "OK");
             Console.WriteLine(ex.Message);
         }
     }
@@ -87,7 +93,7 @@ public partial class ItemListViewModel : ViewModelBase<ItemListParameter>
         }
         catch (Exception ex)
         {
-            await Shell.Current.CurrentPage.DisplayAlert("AddItem: Error", ex.Message, "OK");
+            await _dialogService.DisplayAlert("AddItem: Error", ex.Message, "OK");
             Console.WriteLine(ex.Message);
         }
     }

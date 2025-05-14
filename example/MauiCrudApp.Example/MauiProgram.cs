@@ -4,11 +4,8 @@ using MauiCrudApp.Common.Interfaces;
 using MauiCrudApp.Common.Services;
 
 using MauiCrudApp.Example.Core.Services;
-using MauiCrudApp.Example.Features;
-using MauiCrudApp.Example.Features.ItemList.ViewModels;
-using MauiCrudApp.Example.Features.ItemList.Views;
-using MauiCrudApp.Example.Features.ItemEdit.ViewModels;
-using MauiCrudApp.Example.Features.ItemEdit.Views;
+using MauiCrudApp.Example.Features.ItemListEdit.ViewModels;
+using MauiCrudApp.Example.Features.ItemListEdit.Views;
 
 namespace MauiCrudApp.Example
 {
@@ -39,13 +36,16 @@ namespace MauiCrudApp.Example
             // Services
             builder.Services.AddSingleton<IItemService, ItemService>();
 
-            // ViewModels
-            builder.Services.AddTransient<ItemListViewModel>();
-            builder.Services.AddTransient<ItemEditViewModel>();
 
-            // Views
+
+            // Feature/ItemListEdit : ItemList
+            builder.Services.AddTransient<ItemListViewModel>();
             builder.Services.AddTransient<ItemListPage>();
+            // Feature/ItemListEdit : ItemEdit
+            builder.Services.AddTransient<ItemEditViewModel>();
             builder.Services.AddTransient<ItemEditPage>();
+
+
 
             // Register AppShell and App
             builder.Services.AddSingleton<AppShell>();

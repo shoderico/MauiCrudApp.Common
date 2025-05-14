@@ -1,4 +1,4 @@
-﻿namespace MauiCrudApp.Example.Features.ItemList.ViewModels;
+﻿namespace MauiCrudApp.Example.Features.ItemListEdit.ViewModels;
 
 public class ItemListParameter
 {

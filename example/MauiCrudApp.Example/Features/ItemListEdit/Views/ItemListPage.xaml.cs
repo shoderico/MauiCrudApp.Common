@@ -1,7 +1,7 @@
 using MauiCrudApp.Common.Views;
-using MauiCrudApp.Example.Features.ItemList.ViewModels;
+using MauiCrudApp.Example.Features.ItemListEdit.ViewModels;
 
-namespace MauiCrudApp.Example.Features.ItemList.Views;
+namespace MauiCrudApp.Example.Features.ItemListEdit.Views;
 
 public partial class ItemListPage : PageBase
 {

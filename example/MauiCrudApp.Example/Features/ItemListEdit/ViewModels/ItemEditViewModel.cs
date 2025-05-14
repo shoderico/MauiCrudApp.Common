@@ -10,27 +10,30 @@ using MauiCrudApp.Common.ViewModels;
 using MauiCrudApp.Example.Core.Models;
 using MauiCrudApp.Example.Core.Services;
 
-namespace MauiCrudApp.Example.Features.ItemEdit.ViewModels;
+
+namespace MauiCrudApp.Example.Features.ItemListEdit.ViewModels;
 
 public partial class ItemEditViewModel : ViewModelBase<ItemEditParameter>, IEditableViewModel, IDisposable
 {
     private readonly INavigationService _navigationService;
+    private readonly IDialogService _dialogService;
     private readonly IItemService _itemService;
 
     private bool _disposed;
 
-    public ItemEditViewModel(INavigationParameterStore parameterStore, INavigationService navigationService, IItemService itemService) : base(parameterStore)
+    public ItemEditViewModel(
+          INavigationParameterStore parameterStore
+        , INavigationService navigationService
+        , IDialogService dialogService
+        , IItemService itemService
+        ) : base(parameterStore)
     {
         _navigationService = navigationService;
+        _dialogService = dialogService;
         _itemService = itemService;
 
         _disposed = false;
-
-        //_originalItem = new Item();
-        IsNew = false;
-        //Item = new Item();
-        //_listItems = new Collection<Item>();
-        //_itemChangeTracker = new ChangeTracker(typeof(Item), Item);
+        isNew = false;
     }
 
 
@@ -63,14 +66,8 @@ public partial class ItemEditViewModel : ViewModelBase<ItemEditParameter>, IEdit
 
         IsNew = parameter.IsNew;
 
-        if (IsNew == true)
-        {
-            _originalItem = new Item();
-        }
-        else
-        {
-            _originalItem = await _itemService.GetItemByIdAsync(parameter.ItemId);
-        }
+        _originalItem = IsNew ? new Item()
+                              : await _itemService.GetItemByIdAsync(parameter.ItemId);
 
         Item = new Item()
         {

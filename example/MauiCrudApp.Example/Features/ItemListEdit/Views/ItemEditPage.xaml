@@ -4,7 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:commonViews="clr-namespace:MauiCrudApp.Common.Views;assembly=MauiCrudApp.Common"
     xmlns:converters="clr-namespace:MauiCrudApp.Example.Converters"
-    x:Class="MauiCrudApp.Example.Features.ItemEdit.Views.ItemEditPage"
+    x:Class="MauiCrudApp.Example.Features.ItemListEdit.Views.ItemEditPage"
     Title="ItemEditPage">
 
     <commonViews:PageBase.Resources>
