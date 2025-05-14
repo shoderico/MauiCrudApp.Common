@@ -14,9 +14,14 @@ public class NavigationParameterStore : INavigationParameterStore
         if (_parameters.TryGetValue(typeof(TParameter), out var parameter))
         {
             _parameters.Remove(typeof(TParameter));
+
+            // Explicitly check if the parameter can be cast to TParameter
+            if (parameter != null && !typeof(TParameter).IsAssignableFrom(parameter.GetType()))
+            {
+                throw new InvalidCastException($"Cannot cast stored parameter of type {parameter.GetType().Name} to {typeof(TParameter).Name}.");
+            }
             return (TParameter)parameter;
         }
-
-        return default;
+        throw new InvalidOperationException($"No parameter of type {typeof(TParameter).Name} found.");
     }
 }
