@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<commonViews:PageBase
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:commonViews="clr-namespace:MauiCrudApp.Common.Views;assembly=MauiCrudApp.Common"
+    x:Class="$rootnamespace$.$fileinputname$.Views.$fileinputname$Page"
+    Title="$fileinputname$Page">
+
+    <ScrollView>
+        <StackLayout Padding="20" Spacing="10">
+            <Button Text="検索" Command="{Binding SearchCommand}" />
+            <Button Text="新規追加" Command="{Binding AddItemCommand}" />
+        </StackLayout>
+    </ScrollView>
+
+</commonViews:PageBase>

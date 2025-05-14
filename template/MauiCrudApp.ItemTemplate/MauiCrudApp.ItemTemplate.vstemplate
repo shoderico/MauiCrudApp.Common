@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<VSTemplate Version="3.0.0" Type="Item" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" xmlns:sdk="http://schemas.microsoft.com/developer/vstemplate-sdkextension/2010">
+  <TemplateData>
+    <Name>MauiCrudApp Feature Template</Name>
+    <Description>Create feature folder and ViewModel/Parameter and Page</Description>
+    <Icon>MauiCrudAppItemTemplate.ico</Icon>
+    <TemplateID>850e3c01-a542-4090-9402-25d21386d92a</TemplateID>
+    <ProjectType>CSharp</ProjectType>
+    <DefaultName>Feature</DefaultName>
+  </TemplateData>
+  <TemplateContent>
+	<ProjectItem ReplaceParameters="true" TargetFileName="$fileinputname$\ViewModels\$fileinputname$ViewModel.cs">ViewModels\NewFeatureViewModel.cs</ProjectItem>
+	<ProjectItem ReplaceParameters="true" TargetFileName="$fileinputname$\ViewModels\$fileinputname$Parameter.cs">ViewModels\NewFeatureParameter.cs</ProjectItem>
+	<ProjectItem ReplaceParameters="true" TargetFileName="$fileinputname$\Views\$fileinputname$Page.xaml">Views\NewFeaturePage.xaml</ProjectItem>
+	<ProjectItem ReplaceParameters="true" TargetFileName="$fileinputname$\Views\$fileinputname$Page.xaml.cs">Views\NewFeaturePage.xaml.cs</ProjectItem>
+  </TemplateContent>
+</VSTemplate>

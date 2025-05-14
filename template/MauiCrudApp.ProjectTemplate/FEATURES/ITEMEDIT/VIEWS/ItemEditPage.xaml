@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<commonViews:PageBase
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:commonViews="clr-namespace:MauiCrudApp.Common.Views;assembly=MauiCrudApp.Common"
+    xmlns:converters="clr-namespace:$safeprojectname$.Converters"
+    x:Class="$safeprojectname$.Features.ItemEdit.Views.ItemEditPage"
+    Title="ItemEditPage">
+
+    <commonViews:PageBase.Resources>
+        <converters:BoolToStringConverter x:Key="BoolToStringConverter" />
+    </commonViews:PageBase.Resources>
+
+    <StackLayout Padding="20">
+        <Label Text="{Binding IsNew, Converter={StaticResource BoolToStringConverter}, StringFormat='Item {0}'}" FontSize="24" />
+
+        <Entry Text="{Binding Item.Name}" Placeholder="Name" />
+        <Entry Text="{Binding Item.Description}" Placeholder="Description" />
+
+        <Button Text="Save" Command="{Binding SaveCommand}" />
+        <Button Text="Cancel" Command="{Binding CancelCommand}" />
+    </StackLayout>
+
+
+</commonViews:PageBase>
