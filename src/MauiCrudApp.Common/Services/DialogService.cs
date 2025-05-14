@@ -4,6 +4,15 @@ namespace MauiCrudApp.Common.Services;
 
 public class DialogService : IDialogService
 {
+    public async Task DisplayAlert(string title, string message, string cancel)
+    {
+        var currentPage = Shell.Current?.CurrentPage;
+        if (currentPage != null)
+        {
+            await currentPage.DisplayAlert(title, message, cancel);
+        }
+    }
+
     public async Task<bool> DisplayAlert(string title, string message, string accept, string cancel)
     {
         var currentPage = Microsoft.Maui.Controls.Shell.Current?.CurrentPage;
@@ -13,4 +22,5 @@ public class DialogService : IDialogService
         }
         return false;
     }
+
 }
