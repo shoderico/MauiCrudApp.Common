@@ -41,10 +41,7 @@ public partial class ItemEditViewModel : ViewModelBase<ItemEditParameter>, IEdit
 
     private ChangeTracker _itemChangeTracker;
 
-    private bool _hasChanges;
-    private bool _changesHandled;
-
-    public bool IsEditing => _hasChanges == true && _changesHandled == false;
+    public bool IsEditing => _itemChangeTracker.HasChanges;
 
     public override async Task InitializeAsync(ItemEditParameter parameter)
     {
@@ -69,7 +66,7 @@ public partial class ItemEditViewModel : ViewModelBase<ItemEditParameter>, IEdit
         };
 
         _itemChangeTracker = new ChangeTracker(typeof(Item), Item);
-        _itemChangeTracker.TrackProperty(this, nameof(Item), () => _hasChanges = _itemChangeTracker.HasChanges);
+        _itemChangeTracker.TrackProperty(this, nameof(Item));
 
         await Task.CompletedTask;
     }
@@ -95,14 +92,14 @@ public partial class ItemEditViewModel : ViewModelBase<ItemEditParameter>, IEdit
             await _itemService.UpdateItemAsync(Item);
         }
 
-        _changesHandled = true;
+        _itemChangeTracker.Save();
         await _navigationService.GoBackAsync();
     }
 
     [RelayCommand]
     private async Task Cancel()
     {
-        _changesHandled = true;
+        _itemChangeTracker.Save();
         await _navigationService.GoBackAsync();
     }
 
