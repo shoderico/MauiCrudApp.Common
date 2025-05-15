@@ -8,25 +8,25 @@
 
     <ScrollView>
         <StackLayout Padding="20" Spacing="10">
-            <Entry Text="{Binding SearchText}" Placeholder="検索..." />
-            <Button Text="検索" Command="{Binding SearchCommand}" />
+            <Entry Text="{Binding SearchText}" Placeholder="Search..." />
+            <Button Text="Search" Command="{Binding SearchCommand}" />
             <CollectionView ItemsSource="{Binding Items}">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <StackLayout Padding="10">
                             <Label Text="{Binding Name}" FontSize="18" />
                             <Label Text="{Binding Description}" FontSize="14" />
-                            <Button Text="編集" 
+                            <Button Text="Edit" 
                                     Command="{Binding Source={RelativeSource AncestorType={x:Type CollectionView}}, Path=BindingContext.EditItemCommand}" 
                                     CommandParameter="{Binding .}" />
-                            <Button Text="削除" 
+                            <Button Text="Delete" 
                                     Command="{Binding Source={RelativeSource AncestorType={x:Type CollectionView}}, Path=BindingContext.DeleteItemCommand}" 
                                     CommandParameter="{Binding .}" />
                         </StackLayout>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
-            <Button Text="新規追加" Command="{Binding AddItemCommand}" />
+            <Button Text="Add" Command="{Binding AddItemCommand}" />
         </StackLayout>
     </ScrollView>
 

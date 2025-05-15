@@ -11,7 +11,7 @@
         <converters:BoolToStringConverter x:Key="BoolToStringConverter" />
     </commonViews:PageBase.Resources>
 
-    <StackLayout Padding="20">
+    <StackLayout Padding="20" Spacing="10">
         <Label Text="{Binding IsNew, Converter={StaticResource BoolToStringConverter}, StringFormat='Item {0}'}" FontSize="24" />
 
         <Entry Text="{Binding Item.Name}" Placeholder="Name" />
