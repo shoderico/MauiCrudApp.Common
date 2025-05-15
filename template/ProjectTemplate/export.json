@@ -1,0 +1,4 @@
+{
+  "outputDir": "binaries",
+  "vsTemplatePath": "$env:USERPROFILE\\Documents\\Visual Studio 2022\\Templates\\ProjectTemplates\\C#"
+}

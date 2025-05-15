@@ -1,0 +1,7 @@
+{
+  "projectPath": "..\\..\\example\\MauiCrudApp.Example",
+  "templateName": "MauiCrudApp.ProjectTemplate",
+  "vstemplateSource": "MyTemplate.vstemplate",
+  "iconSource": "__TemplateIcon.ico",
+  "namespaceToReplace": "MauiCrudApp.Example"
+}

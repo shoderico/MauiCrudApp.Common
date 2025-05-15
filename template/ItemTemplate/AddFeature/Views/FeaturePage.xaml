@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<commonViews:PageBase
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:commonViews="clr-namespace:MauiCrudApp.Common.Views;assembly=MauiCrudApp.Common"
+    x:Class="$rootnamespace$.Views.$fileinputname$Page"
+    Title="$fileinputname$Page">
+
+    <ScrollView>
+        <StackLayout Padding="20" Spacing="10">
+            <Button Text="Search" Command="{Binding SearchCommand}" />
+            <Button Text="Navigate" Command="{Binding NavigateCommand}" />
+            <Button Text="Back" Command="{Binding BackCommand}" />
+        </StackLayout>
+    </ScrollView>
+
+</commonViews:PageBase>

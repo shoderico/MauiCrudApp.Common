@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<VSTemplate Version="3.0.0" Type="Item" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" xmlns:sdk="http://schemas.microsoft.com/developer/vstemplate-sdkextension/2010">
+  <TemplateData>
+    <Name>.NET MAUI: MauiCrudApp: Add Feature</Name>
+    <Description>Add to a Feature for the new feature and place the ViewModel, Parameter, and Page in it.</Description>
+    <Icon>__Template.ico</Icon>
+    <ProjectType>CSharp</ProjectType>
+    <DefaultName>Feature</DefaultName>
+  </TemplateData>
+  <TemplateContent>
+	<ProjectItem ReplaceParameters="true" TargetFileName="ViewModels\$fileinputname$ViewModel.cs">ViewModels\FeatureViewModel.cs</ProjectItem>
+	<ProjectItem ReplaceParameters="true" TargetFileName="ViewModels\$fileinputname$Parameter.cs">ViewModels\FeatureParameter.cs</ProjectItem>
+	<ProjectItem ReplaceParameters="true" TargetFileName="Views\$fileinputname$Page.xaml">Views\FeaturePage.xaml</ProjectItem>
+	<ProjectItem ReplaceParameters="true" TargetFileName="Views\$fileinputname$Page.xaml.cs">Views\FeaturePage.xaml.cs</ProjectItem>
+  </TemplateContent>
+</VSTemplate>
