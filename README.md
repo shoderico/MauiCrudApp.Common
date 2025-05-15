@@ -389,11 +389,15 @@ To make starting with **MauiCrudApp.Common** even easier, we provide **Visual St
 
 ```
 template/
-├── MauiCrudApp.ProjectTemplate/
-│   ├── MauiCrudApp.ProjectTemplate.zip  # Project template for new CRUD apps
+├── ProjectTemplate/
+│   ├── binaries/...
+│   │   ├── MauiCrudApp.ProjectTemplate.zip  # Project template for new CRUD apps
+│   │   ├── ...
 │   ├── ...
-├── MauiCrudApp.ItemTemplate/
-│   ├── MauiCrudApp.ItemTemplate.zip    # Item template for adding new features
+├── ItemTemplate/
+│   ├── binaries/...
+│   │   ├── MauiCrudApp.AddFeature.zip    # Item template for adding new features
+│   │   ├── ...
 │   ├── ...
 ```
 
@@ -404,17 +408,17 @@ To use the templates in Visual Studio, copy the ZIP files to the appropriate Vis
 
 - **Project Template**:
   ```bash
-  %USERPROFILE%\Documents\Visual Studio <version>\Templates\ProjectTemplates
+  %USERPROFILE%\Documents\Visual Studio <version>\Templates\ProjectTemplates\C#
   ```
 - **Item Template**:
   ```bash
-  %USERPROFILE%\Documents\Visual Studio <version>\Templates\ItemTemplates
+  %USERPROFILE%\Documents\Visual Studio <version>\Templates\ItemTemplates\C#
   ```
 
 Replace `<version>` with your Visual Studio version (e.g., 2022). Once copied, the templates will appear in Visual Studio’s **New Project** and **Add New Item** dialogs.
 
 #### 2. **Set Up a New Project with the Project Template**
-The **MauiCrudApp.ProjectTemplate** creates a new .NET MAUI project preconfigured to work with **MauiCrudApp.Common**. After creating the project in Visual Studio, follow these steps to integrate the library:
+The **.NET MAUI: MauiCrudApp: Project Template** creates a new .NET MAUI project preconfigured to work with **MauiCrudApp.Common**. After creating the project in Visual Studio, follow these steps to integrate the library:
 
 - **Clone the MauiCrudApp.Common Repository**:
   Clone the **MauiCrudApp.Common** repository into a folder adjacent to your new project’s root directory, so the structure looks like this:
@@ -441,26 +445,39 @@ The **MauiCrudApp.ProjectTemplate** creates a new .NET MAUI project preconfigure
 
 This sets up your project to leverage the library’s navigation, change tracking, and dialog features.
 
-#### 3. **Add Features with the Item Template**
-The **MauiCrudApp.ItemTemplate** lets you quickly add new features to the `Features/` folder of your project. When you add a new item named `Feature1` using the template, it generates a fully structured feature module:
+#### 3. **Adding Features with the Item Template**
+
+The **.NET MAUI: MauiCrudApp: Add Feature** item template allows you to add new feature components to a user-created folder under the `Features/` directory in your project. Instead of automatically creating a feature folder, the template now requires you to manually create a folder (e.g., `Device`) under `Features/`. You can then use the template to generate view models, navigation parameters, and pages within that folder.
+
+For example, if you create a folder named `Device` and use the template to add a feature named `ScanDevice`, the following structure is generated:
 
 ```
 ├── YourCreatedProject/
 │   ├── Features/
-│   │   ├── Feature1/
+│   │   ├── Device/
 │   │   │   ├── ViewModels/
-│   │   │   │   ├── Feature1ViewModel.cs     # View model for the feature
-│   │   │   │   ├── Feature1Parameter.cs     # Navigation parameter for the feature
+│   │   │   │   ├── ScanDeviceViewModel.cs     # View model for the feature
+│   │   │   │   ├── ScanDeviceParameter.cs     # Navigation parameter for the feature
 │   │   │   ├── Views/
-│   │   │   │   ├── Feature1Page.xaml        # XAML for the feature’s UI
-│   │   │   │   ├── Feature1Page.xaml.cs     # Code-behind for the feature page
+│   │   │   │   ├── ScanDevicePage.xaml        # XAML for the feature’s UI
+│   │   │   │   ├── ScanDevicePage.xaml.cs     # Code-behind for the feature page
 ```
 
-To add a new feature:
-1. In Visual Studio, right-click the `Features/` folder in Solution Explorer.
-2. Select **Add > New Item**.
-3. Choose the **MauiCrudApp.ItemTemplate** and name it (e.g., `Feature1`).
-4. The template generates the view model, navigation parameter, XAML page, and code-behind, ready to integrate with the library’s navigation and change-tracking features.
+##### Steps to Add a New Feature
+
+1. In your project, manually create a folder under `Features/` (e.g., `Device`).
+2. In Visual Studio, right-click the `Device` folder in Solution Explorer.
+3. Select **Add > New Item**.
+4. Choose the **.NET MAUI: MauiCrudApp: Add Feature** and enter a name (e.g., `ScanDevice`).
+5. Click **Add** to generate the feature components:
+   - If `ViewModels/` or `Views/` folders do not exist in the target folder, they are automatically created.
+   - The template generates the view model (`ScanDeviceViewModel.cs`), navigation parameter (`ScanDeviceParameter.cs`), XAML page (`ScanDevicePage.xaml`), and code-behind (`ScanDevicePage.xaml.cs`).
+
+##### Why This Change?
+
+This updated approach allows greater flexibility, as a single feature folder (e.g., `Device`) can contain multiple view models and pages. For example, you can add `ScanDevice`, `ListDevice`, or other related components under the same `Device` folder, enabling better organization for features with multiple UI components.
+
+The generated files are pre-configured to integrate seamlessly with the library’s navigation and change-tracking features.
 
 These templates streamline your workflow, letting you focus on building great apps with **MauiCrudApp.Common**! 🚀
 
