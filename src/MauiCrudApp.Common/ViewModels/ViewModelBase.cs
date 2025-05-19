@@ -9,6 +9,8 @@ public abstract class ViewModelBase<TParameter> : ObservableObject, IInitialize
     private readonly INavigationParameterStore _parameterStore;
     private readonly TParameter _parameter;
 
+    private bool _isInitialized = false;
+
     protected ViewModelBase(INavigationParameterStore parameterStore)
     {
         _parameterStore = parameterStore ?? throw new ArgumentNullException(nameof(parameterStore));
@@ -19,7 +21,11 @@ public abstract class ViewModelBase<TParameter> : ObservableObject, IInitialize
 
     public async Task PerformInitializeAsync()
     {
-        await InitializeAsync(_parameter);
+        if (!_isInitialized)
+        {
+            await InitializeAsync(_parameter);
+            _isInitialized = true;
+        }
     }
 
     public abstract Task InitializeAsync(TParameter parameter);
