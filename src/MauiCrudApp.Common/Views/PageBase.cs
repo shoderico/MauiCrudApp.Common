@@ -10,9 +10,9 @@ namespace MauiCrudApp.Common.Views
 {
     public abstract class PageBase : ContentPage
     {
-        protected readonly IInitialize _viewModel;
+        protected readonly ILifecycle _viewModel;
 
-        public PageBase(IInitialize viewModel)
+        public PageBase(ILifecycle viewModel)
         {
             _viewModel = viewModel;
         }
@@ -21,6 +21,12 @@ namespace MauiCrudApp.Common.Views
         {
             base.OnAppearing();
             await _viewModel.PerformInitializeAsync();
+        }
+
+        protected override async void OnDisappearing()
+        {
+            base.OnDisappearing();
+            await _viewModel.PerformFinalizeAsync();
         }
     }
 }

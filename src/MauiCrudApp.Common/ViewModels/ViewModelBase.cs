@@ -4,12 +4,13 @@ using MauiCrudApp.Common.Navigation;
 
 namespace MauiCrudApp.Common.ViewModels;
 
-public abstract class ViewModelBase<TParameter> : ObservableObject, IInitialize
+public abstract class ViewModelBase<TParameter> : ObservableObject, ILifecycle
 {
     private readonly INavigationParameterStore _parameterStore;
     private readonly TParameter _parameter;
 
     private bool _isInitialized = false;
+    private bool _isFinalized = false;
 
     protected ViewModelBase(INavigationParameterStore parameterStore)
     {
@@ -21,13 +22,17 @@ public abstract class ViewModelBase<TParameter> : ObservableObject, IInitialize
 
     public async Task PerformInitializeAsync()
     {
-        if (!_isInitialized)
-        {
-            await InitializeAsync(_parameter);
-            _isInitialized = true;
-        }
+        await InitializeAsync(_parameter, _isInitialized);
+        _isInitialized = true;
     }
 
-    public abstract Task InitializeAsync(TParameter parameter);
+    public async Task PerformFinalizeAsync()
+    {
+        await FinalizeAsync(_isFinalized);
+        _isFinalized = true;
+    }
+
+    public virtual Task InitializeAsync(TParameter parameter, bool isInitialized) { return Task.CompletedTask; }
+    public virtual Task FinalizeAsync(bool isFinalized) {  return Task.CompletedTask; }
 
 }

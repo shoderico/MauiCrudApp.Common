@@ -1,6 +1,7 @@
 ﻿namespace MauiCrudApp.Common.Interfaces;
 
-public interface IInitialize
+public interface ILifecycle
 {
     Task PerformInitializeAsync();
+    Task PerformFinalizeAsync();
 }
