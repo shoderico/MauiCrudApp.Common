@@ -7,8 +7,8 @@ using MauiCrudApp.Common.Interfaces;
 using MauiCrudApp.Common.ViewModels;
 
 using MauiCrudApp.Example.Core.Models;
-using MauiCrudApp.Example.Core.Services;
 using MauiCrudApp.Example.Features.ItemListEdit.Views;
+using MauiCrudApp.Example.Core.Interfaces;
 
 
 namespace MauiCrudApp.Example.Features.ItemListEdit.ViewModels;

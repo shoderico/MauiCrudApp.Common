@@ -3,10 +3,6 @@ using MauiCrudApp.Common.Navigation;
 using MauiCrudApp.Common.Interfaces;
 using MauiCrudApp.Common.Services;
 
-using MauiCrudApp.Example.Core.Services;
-using MauiCrudApp.Example.Features.ItemListEdit.ViewModels;
-using MauiCrudApp.Example.Features.ItemListEdit.Views;
-
 namespace MauiCrudApp.Example
 {
     public static class MauiProgram
@@ -34,16 +30,16 @@ namespace MauiCrudApp.Example
 
 
             // Services
-            builder.Services.AddSingleton<IItemService, ItemService>();
+            builder.Services.AddSingleton<Core.Interfaces.IItemService, Core.Services.ItemService>();
 
 
 
             // Feature/ItemListEdit : ItemList
-            builder.Services.AddTransient<ItemListViewModel>();
-            builder.Services.AddTransient<ItemListPage>();
+            builder.Services.AddTransient<Features.ItemListEdit.ViewModels.ItemListViewModel>();
+            builder.Services.AddTransient<Features.ItemListEdit.Views.ItemListPage>();
             // Feature/ItemListEdit : ItemEdit
-            builder.Services.AddTransient<ItemEditViewModel>();
-            builder.Services.AddTransient<ItemEditPage>();
+            builder.Services.AddTransient<Features.ItemListEdit.ViewModels.ItemEditViewModel>();
+            builder.Services.AddTransient<Features.ItemListEdit.Views.ItemEditPage>();
 
 
 

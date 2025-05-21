@@ -1,6 +1,6 @@
 ﻿using MauiCrudApp.Example.Core.Models;
 
-namespace MauiCrudApp.Example.Core.Services;
+namespace MauiCrudApp.Example.Core.Interfaces;
 
 public interface IItemService
 {

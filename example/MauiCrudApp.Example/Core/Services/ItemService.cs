@@ -1,4 +1,5 @@
-﻿using MauiCrudApp.Example.Core.Models;
+﻿using MauiCrudApp.Example.Core.Interfaces;
+using MauiCrudApp.Example.Core.Models;
 
 namespace MauiCrudApp.Example.Core.Services;
 
