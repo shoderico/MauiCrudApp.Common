@@ -20,18 +20,29 @@ namespace MauiCrudApp.Common.Tests.ViewModels
         // Concrete implementation of ViewModelBase for testing
         public class TestViewModel : ViewModelBase<string>
         {
-            public bool InitializeCalled { get; private set; }
+            public bool InitializeCalled { get; set; }
             public string ReceivedParameter { get; private set; }
+            public bool ReceivedIsInitialized { get; private set; }
+            public bool FinalizeCalled { get; set; }
+            public bool ReceivedIsFinalized { get; private set; }
 
             public TestViewModel(INavigationParameterStore parameterStore)
                 : base(parameterStore)
             {
             }
 
-            public override Task InitializeAsync(string parameter)
+            public override Task InitializeAsync(string parameter, bool isInitialized)
             {
                 InitializeCalled = true;
                 ReceivedParameter = parameter;
+                ReceivedIsInitialized = isInitialized;
+                return Task.CompletedTask;
+            }
+
+            public override Task FinalizeAsync(bool isFinalized)
+            {
+                FinalizeCalled = true;
+                ReceivedIsFinalized = isFinalized;
                 return Task.CompletedTask;
             }
         }
@@ -61,6 +72,7 @@ namespace MauiCrudApp.Common.Tests.ViewModels
             // Assert
             Assert.True(viewModel.InitializeCalled);
             Assert.Equal(expectedParameter, viewModel.ReceivedParameter);
+            Assert.False(viewModel.ReceivedIsInitialized); // Initial call should be false
             _parameterStoreMock.Verify(ps => ps.PopParameter<string>(), Times.Once());
         }
 
@@ -79,6 +91,7 @@ namespace MauiCrudApp.Common.Tests.ViewModels
             // Assert
             Assert.True(viewModel.InitializeCalled);
             Assert.Equal(expectedParameter, viewModel.ReceivedParameter);
+            Assert.False(viewModel.ReceivedIsInitialized); // Initial call should be false
         }
 
         [Fact]
@@ -89,7 +102,7 @@ namespace MauiCrudApp.Common.Tests.ViewModels
             _parameterStoreMock.Setup(ps => ps.HasParameter<string>()).Returns(true);
             _parameterStoreMock.Setup(ps => ps.PopParameter<string>()).Returns("TestParameter");
             var errorViewModel = new Mock<TestViewModel>(_parameterStoreMock.Object);
-            errorViewModel.Setup(vm => vm.InitializeAsync(It.IsAny<string>())).ThrowsAsync(expectedException);
+            errorViewModel.Setup(vm => vm.InitializeAsync(It.IsAny<string>(), It.IsAny<bool>())).ThrowsAsync(expectedException);
 
             // Act & Assert
             var exception = await Assert.ThrowsAsync<System.InvalidOperationException>(() =>
@@ -111,6 +124,7 @@ namespace MauiCrudApp.Common.Tests.ViewModels
             // Assert
             Assert.True(viewModel.InitializeCalled);
             Assert.Null(viewModel.ReceivedParameter);
+            Assert.False(viewModel.ReceivedIsInitialized); // Initial call should be false
         }
 
         [Fact]
@@ -126,7 +140,7 @@ namespace MauiCrudApp.Common.Tests.ViewModels
         }
 
         [Fact]
-        public async Task PerformInitializeAsync_MultipleCalls_InitializeAsyncCalledOnce()
+        public async Task PerformInitializeAsync_MultipleCalls_InitializeAsyncWithCorrectIsInitialized()
         {
             // Arrange
             var parameter = "TestParameter";
@@ -134,14 +148,80 @@ namespace MauiCrudApp.Common.Tests.ViewModels
             _parameterStoreMock.Setup(ps => ps.PopParameter<string>()).Returns(parameter);
             var viewModel = new TestViewModel(_parameterStoreMock.Object);
 
-            // Act
-            await viewModel.PerformInitializeAsync();
+            // Act: First call
             await viewModel.PerformInitializeAsync();
 
-            // Assert
+            // Assert: First call
             Assert.True(viewModel.InitializeCalled);
             Assert.Equal(parameter, viewModel.ReceivedParameter);
+            Assert.False(viewModel.ReceivedIsInitialized); // First call should be false
+
+            // Act: Second call
+            viewModel.InitializeCalled = false; // Reset for clarity
+            await viewModel.PerformInitializeAsync();
+
+            // Assert: Second call
+            Assert.True(viewModel.InitializeCalled);
+            Assert.True(viewModel.ReceivedIsInitialized); // Second call should be true
             _parameterStoreMock.Verify(ps => ps.PopParameter<string>(), Times.Once());
+        }
+
+        [Fact]
+        public async Task PerformFinalizeAsync_CallsFinalizeAsyncWithCorrectParameter()
+        {
+            // Arrange
+            var expectedParameter = "TestParameter";
+            _parameterStoreMock.Setup(ps => ps.HasParameter<string>()).Returns(true);
+            _parameterStoreMock.Setup(ps => ps.PopParameter<string>()).Returns(expectedParameter);
+            var viewModel = new TestViewModel(_parameterStoreMock.Object);
+
+            // Act
+            await viewModel.PerformFinalizeAsync();
+
+            // Assert
+            Assert.True(viewModel.FinalizeCalled);
+            Assert.False(viewModel.ReceivedIsFinalized); // Initial call should be false
+        }
+
+        [Fact]
+        public async Task PerformFinalizeAsync_WhenFinalizeAsyncThrowsException_PropagatesException()
+        {
+            // Arrange
+            var expectedException = new System.InvalidOperationException("Test exception");
+            _parameterStoreMock.Setup(ps => ps.HasParameter<string>()).Returns(true);
+            _parameterStoreMock.Setup(ps => ps.PopParameter<string>()).Returns("TestParameter");
+            var errorViewModel = new Mock<TestViewModel>(_parameterStoreMock.Object);
+            errorViewModel.Setup(vm => vm.FinalizeAsync(It.IsAny<bool>())).ThrowsAsync(expectedException);
+
+            // Act & Assert
+            var exception = await Assert.ThrowsAsync<System.InvalidOperationException>(() =>
+                errorViewModel.Object.PerformFinalizeAsync());
+            Assert.Equal(expectedException.Message, exception.Message);
+        }
+
+        [Fact]
+        public async Task PerformFinalizeAsync_MultipleCalls_FinalizeAsyncWithCorrectIsFinalized()
+        {
+            // Arrange
+            var parameter = "TestParameter";
+            _parameterStoreMock.Setup(ps => ps.HasParameter<string>()).Returns(true);
+            _parameterStoreMock.Setup(ps => ps.PopParameter<string>()).Returns(parameter);
+            var viewModel = new TestViewModel(_parameterStoreMock.Object);
+
+            // Act: First call
+            await viewModel.PerformFinalizeAsync();
+
+            // Assert: First call
+            Assert.True(viewModel.FinalizeCalled);
+            Assert.False(viewModel.ReceivedIsFinalized); // First call should be false
+
+            // Act: Second call
+            viewModel.FinalizeCalled = false; // Reset for clarity
+            await viewModel.PerformFinalizeAsync();
+
+            // Assert: Second call
+            Assert.True(viewModel.FinalizeCalled);
+            Assert.True(viewModel.ReceivedIsFinalized); // Second call should be true
         }
     }
 }
