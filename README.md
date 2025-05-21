@@ -35,7 +35,7 @@ MauiCrudApp.Common/
 │   │   ├── Controls/
 │   │   │   ├── ShellBase.cs                 # Base class for MAUI shells
 │   │   ├── ViewModels/
-│   │   │   ├── ViewModelBase.cs             # Base view-model with initialization
+│   │   │   ├── ViewModelBase.cs             # Base view-model with initialization/finalization
 │   │   ├── Views/
 │   │   │   ├── PageBase.cs                  # Base class for pages
 │   │   ├── MauiCrudApp.Common.csproj        # Project file
@@ -51,10 +51,11 @@ The **MauiCrudApp.Example** project showcases how to use **MauiCrudApp.Common** 
 example/
 ├── MauiCrudApp.Example/
 │   ├── Core/
+│   │   ├── Interfaces/
+│   │   │   ├── IItemService.cs            # Interface for item CRUD operations
 │   │   ├── Models/
 │   │   │   ├── Item.cs                    # Data model with change-tracked properties
 │   │   ├── Services/
-│   │   │   ├── IItemService.cs            # Interface for item CRUD operations
 │   │   │   ├── ItemService.cs             # In-memory item service implementation
 │   ├── Features/
 │   │   ├── ItemListEidt/
@@ -211,7 +212,7 @@ public partial class ItemListViewModel : ViewModelBase<ItemListParameter>
     [ObservableProperty]
     private string SearchText;
 
-    public override async Task InitializeAsync(ItemListParameter parameter)
+    public override async Task InitializeAsync(ItemListParameter parameter, bool isInitialized)
     {
         SearchText = parameter?.SearchText;
         await LoadItemsAsync();
@@ -303,14 +304,17 @@ public partial class ItemEditViewModel : ViewModelBase<ItemEditParameter>, IEdit
 
     public bool IsEditing => _itemChangeTracker?.HasChanges == true && !_changesHandled;
 
-    public override async Task InitializeAsync(ItemEditParameter parameter)
+    public override async Task InitializeAsync(ItemEditParameter parameter, bool isIntialized)
     {
-        IsNew = parameter.IsNew;
-        var originalItem = IsNew ? new Item() : await _itemService.GetItemByIdAsync(parameter.ItemId);
-        Item = new Item { Id = originalItem.Id, Name = originalItem.Name, Description = originalItem.Description };
+        if (!isIntialized)
+        {
+            IsNew = parameter.IsNew;
+            var originalItem = IsNew ? new Item() : await _itemService.GetItemByIdAsync(parameter.ItemId);
+            Item = new Item { Id = originalItem.Id, Name = originalItem.Name, Description = originalItem.Description };
 
-        _itemChangeTracker = new ChangeTracker(typeof(Item), Item);
-        _itemChangeTracker.TrackProperty(this, nameof(Item), () => _hasChanges = _itemChangeTracker.HasChanges);
+            _itemChangeTracker = new ChangeTracker(typeof(Item), Item);
+            _itemChangeTracker.TrackProperty(this, nameof(Item), () => _hasChanges = _itemChangeTracker.HasChanges);
+        }
     }
 
     [RelayCommand]
