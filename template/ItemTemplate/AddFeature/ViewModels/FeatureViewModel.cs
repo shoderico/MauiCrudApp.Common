@@ -12,18 +12,13 @@ using $defaultnamespace$.Core.Services;
 // Don't forget to register the ViewModel and Page with the service in MauiProgram.cs.
 /* : MauiProgram.cs
 ...
-
-using $rootnamespace$.ViewModels;
-using $rootnamespace$.Views;
-
-...
 public static class MauiProgram
 {
     ...
    
     // Feature: $fileinputname$
-    builder.Services.AddTransient<$fileinputname$ViewModel>();
-    builder.Services.AddTransient<$fileinputname$Page>();
+    builder.Services.AddTransient<$rootnamespace$.ViewModels.$fileinputname$ViewModel>();
+    builder.Services.AddTransient<$rootnamespace$.Views.$fileinputname$Page>();
 
     ...
 */
