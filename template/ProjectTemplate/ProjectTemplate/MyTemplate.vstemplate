@@ -24,11 +24,13 @@
         <ProjectItem ReplaceParameters="true" TargetFileName="BoolToStringConverter.cs">BoolToStringConverter.cs</ProjectItem>
       </Folder>
       <Folder Name="Core" TargetFolderName="Core">
+        <Folder Name="Interfaces" TargetFolderName="Interfaces">
+          <ProjectItem ReplaceParameters="true" TargetFileName="IItemService.cs">IItemService.cs</ProjectItem>
+        </Folder>
         <Folder Name="Models" TargetFolderName="Models">
           <ProjectItem ReplaceParameters="true" TargetFileName="Item.cs">Item.cs</ProjectItem>
         </Folder>
         <Folder Name="Services" TargetFolderName="Services">
-          <ProjectItem ReplaceParameters="true" TargetFileName="IItemService.cs">IItemService.cs</ProjectItem>
           <ProjectItem ReplaceParameters="true" TargetFileName="ItemService.cs">ItemService.cs</ProjectItem>
         </Folder>
       </Folder>
