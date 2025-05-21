@@ -96,3 +96,4 @@ Copy-Item -Path $zipPath -Destination $vsTemplateDest
 Remove-Item -Recurse -Force $tempDir
 
 Write-Output "Item template '$templateName.zip' created at $outputDir and copied to Visual Studio C# ItemTemplates folder."
+Write-Output "Execute the following command to refresh template cache: devenv /updateconfiguration"
