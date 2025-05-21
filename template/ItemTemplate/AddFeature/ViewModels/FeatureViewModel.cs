@@ -75,10 +75,16 @@ public partial class $fileinputname$ViewModel : ViewModelBase<$fileinputname$Par
         _dialogService = dialogService;
     }
 
-    public override Task InitializeAsync($fileinputname$Parameter parameter)
+    public override Task InitializeAsync($fileinputname$Parameter parameter, bool isInitialized)
     {
         // This function is called from the Page's OnAppearing.
         // The parameter may be NULL.
+        return Task.CompletedTask;
+    }
+    
+    public override Task FinalizeAsync(bool isFinalized)
+    {
+        // This function is called from the Page's OnDisappearing.
         return Task.CompletedTask;
     }
 	
