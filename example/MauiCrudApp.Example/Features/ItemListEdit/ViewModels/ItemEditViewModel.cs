@@ -60,24 +60,27 @@ public partial class ItemEditViewModel : ViewModelBase<ItemEditParameter>, IEdit
         }
     }
 
-    public override async Task InitializeAsync(ItemEditParameter parameter)
+    public override async Task InitializeAsync(ItemEditParameter parameter, bool isInitialized)
     {
-        _listItems = parameter.ListItems;
-
-        IsNew = parameter.IsNew;
-
-        _originalItem = IsNew ? new Item()
-                              : await _itemService.GetItemByIdAsync(parameter.ItemId);
-
-        Item = new Item()
+        if (!isInitialized)
         {
-            Id = _originalItem?.Id ?? 0,
-            Name = _originalItem?.Name ?? "",
-            Description = _originalItem?.Description ?? ""
-        };
+            _listItems = parameter.ListItems;
 
-        _itemChangeTracker = new ChangeTracker(typeof(Item), Item);
-        _itemChangeTracker.TrackProperty(this, nameof(Item));
+            IsNew = parameter.IsNew;
+
+            _originalItem = IsNew ? new Item()
+                                  : await _itemService.GetItemByIdAsync(parameter.ItemId);
+
+            Item = new Item()
+            {
+                Id = _originalItem?.Id ?? 0,
+                Name = _originalItem?.Name ?? "",
+                Description = _originalItem?.Description ?? ""
+            };
+
+            _itemChangeTracker = new ChangeTracker(typeof(Item), Item);
+            _itemChangeTracker.TrackProperty(this, nameof(Item));
+        }
 
         await Task.CompletedTask;
     }

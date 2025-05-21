@@ -42,7 +42,7 @@ public partial class ItemListViewModel : ViewModelBase<ItemListParameter>
     [ObservableProperty]
     private string? searchText;
 
-    public override async Task InitializeAsync(ItemListParameter parameter)
+    public override async Task InitializeAsync(ItemListParameter parameter, bool isInitialized)
     {
         if (parameter != null)
         {
