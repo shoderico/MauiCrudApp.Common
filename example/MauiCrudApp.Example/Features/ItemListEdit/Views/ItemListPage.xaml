@@ -13,7 +13,7 @@
             <CollectionView ItemsSource="{Binding Items}">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <StackLayout Padding="10">
+                        <StackLayout Padding="10" Spacing="2">
                             <Label Text="{Binding Name}" FontSize="18" />
                             <Label Text="{Binding Description}" FontSize="14" />
                             <Button Text="Edit" 
